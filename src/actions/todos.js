@@ -8,16 +8,14 @@ let nextID = 0;
 export const addTodo = (text) => ({
   type: todosActionTypes.ADD_TODO,
   payload: {
-    id: nextID++,
+    id: ++nextID,
     text: text,
   }
 });
 
 export const deleteTodo = (id) => ({
   type: todosActionTypes.DELETE_TODO,
-  payload: {
-    id,
-  }
+  payload: { id }
 });
 
 export const editTodo = (id, text) => ({

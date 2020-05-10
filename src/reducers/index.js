@@ -7,7 +7,7 @@ import { appReducer } from './app';
 // unifica todas as stores em uma única store global
 const rootReducer = combineReducers({
   appInfo: appReducer,
-  taskList: todosReducer,
+  todos: todosReducer,
 });
 
 export default rootReducer;

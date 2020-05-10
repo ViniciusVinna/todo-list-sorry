@@ -1,15 +1,9 @@
 import { todosActionTypes } from '../constants/todos';
 
 const INITIAL_STATE = {
-  todos: [
-    {
-      id: 1,
-      text: 'Pagar contas',
-      completed: false,
-    }
-  ],
-  incompletedTodos: [],
-  completedTodos: [],
+  all: [],
+  pending: [],
+  done: [],
 };
 
 export const todosReducer = (state = INITIAL_STATE, action) => {
@@ -24,9 +18,40 @@ export const todosReducer = (state = INITIAL_STATE, action) => {
       }
 
       return {
-        ...state,
-        todos: [...state.todos, item]
+        all: [...state.all, item],
+        pending: [...state.all, item].filter(task => !task.completed),
+        done: [...state.all, item].filter(task => task.completed),
       }
+    case todosActionTypes.TOGGLE_TODO_CHECK:
+      return {
+        all: [...state.all].map(item => {
+          if (item.id === payload.id) {
+            return {...item, completed: true }
+          }
+
+          return item;
+        }),
+        pending: [...state.all]
+          .filter(tasks => tasks.id !== payload.id)
+          .filter(task => !task.completed),
+        done: [...state.all]
+          .map(item => {
+            if (item.id === payload.id) {
+              return {...item, completed: true }
+            }
+
+            return item;
+          })
+          .filter(task => task.completed),
+      }
+    case todosActionTypes.DELETE_TODO:
+      const deleteID = payload.id;
+
+      return {
+        all: state.all.filter(item => item.id !== deleteID),
+        pending: state.pending.filter(item => item.id !== deleteID),
+        done: state.done.filter(item => item.id !== deleteID),
+      };
     default:
       return state;
   }
